@@ -11,7 +11,7 @@ def create_separable_data(weights, b, num_lines):
     for i in range(num_lines):
         x = random.rand(1, num_features) * 20 - 10
         # 生成-10到10之间的随机数，一个num_features维的列表
-        inner_product = sum(w * x)+b
+        inner_product = sum(w * x) + b
         # w*x会返回一个 array()，内部存有列表，各个元素为两个列表元素之积
         if inner_product <= 0:
             data_set[i] = append(x, -1)
@@ -40,21 +40,37 @@ def data_plot(data_set):
     plt.legend(loc='upper right')
     plt.show()
 
-def train(data_set,plot=False):
-    num_lines=data_set.shape[0]
-                                    # 获取data_set的行数和每行的维数
-    num_features=data_set.shape[1]
-    w=zeros((1,num_features-1))
-    b=0                             # 初始化分割线
-    separated=False
 
-    i=0;
-    while not separated and i<num_lines:
-        if data_set[i][-1]*(sum(w*data_set[i,0:-1])+b)<=0:
-            w+=data_set[i][-1]*data_set[i,0:-1]
-            b=b+data_set[i][-1]
-            separated=False
-            i=0
+def train(data_set, plot=False):
+    num_lines = data_set.shape[0]
+    # 获取data_set的行数和每行的维数
+    num_features = data_set.shape[1]
+    w = zeros((1, num_features - 1))
+    b = 0  # 初始化分割线
+    separated = False
+
+    i = 0
+    while not separated and i < num_lines:
+        if data_set[i][-1] * (sum(w * data_set[i, 0:-1]) + b) <= 0:
+            w += data_set[i][-1] * data_set[i, 0:-1]
+            b = b + data_set[i][-1]
+            separated = False
+            i = 0
             # 一旦有一个分类出错则全部重新来过
         else:
-            i+=1
+            i += 1
+    if plot == True:
+        import matplotlib.pyplot as plt
+        from matplotlib.lines import Line2D
+        fig = plt.figure()
+        ax = fig.add_subplot(1, 1, 1)
+        ax.set_title('Linear separable data set')
+        plt.xlabel('X')
+        plt.ylabel('Y')
+        idx_1 = where(data_set[:, 2] == 1)
+        p1 = ax.scatter(data_set[idx_1, 0], data_set[idx_1, 1],marker='o',color='g',label=1,s=20)
+        idx_2 = where(data_set[:, 2] == -1)
+        p1 = ax.scatter(data_set[idx_2, 0], data_set[idx_2, 1],marker='x',color='r',label=1,s=20)
+        x=w[0][0]/abs(w[0][0])*10
+
+
