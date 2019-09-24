@@ -5,8 +5,10 @@ from numpy import *
 
 def create_separable_data(weights, b, num_lines):
     w = array(weights)
+    #array()相当于是列表的嵌套
     num_features = len(weights)
     data_set = zeros((num_lines, num_features + 1))
+    # 多的1个元素用于存储是否为正确隔离的标志
 
     for i in range(num_lines):
         x = random.rand(1, num_features) * 20 - 10
@@ -15,12 +17,12 @@ def create_separable_data(weights, b, num_lines):
         # w*x会返回一个 array()，内部存有列表，各个元素为两个列表元素之积
         if inner_product <= 0:
             data_set[i] = append(x, -1)
-            # 除去最后一个元素为-1，其余元素于x相等
+            # 除去最后一个元素为-1，其余元素与x相等
         else:
             data_set[i] = append(x, 1)
 
     return data_set
-    # 完成对具有线性可分性的数据
+    # 完成对具有线性可分性数据生成
 
 
 def data_plot(data_set):
@@ -33,6 +35,7 @@ def data_plot(data_set):
     plt.ylabel('Y')
     labels = array(data_set[:, 2])
     idx_1 = where(data_set[:, 2] == 1)
+    # 输出相等位置的索引（以位置序号表示）以及相应的数据类型
     p1 = ax.scatter(data_set[idx_1, 0], data_set[idx_1, 1], marker='o', color='g', label=1, s=20)
     # scatter函数，用于取点
     idx_2 = where(data_set[:, 2] == -1)
