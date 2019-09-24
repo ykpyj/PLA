@@ -59,7 +59,7 @@ def train(data_set, plot=False):
             # 一旦有一个分类出错则全部重新来过
         else:
             i += 1
-    if plot == True:
+    if plot:
         import matplotlib.pyplot as plt
         from matplotlib.lines import Line2D
         fig = plt.figure()
@@ -68,9 +68,19 @@ def train(data_set, plot=False):
         plt.xlabel('X')
         plt.ylabel('Y')
         idx_1 = where(data_set[:, 2] == 1)
-        p1 = ax.scatter(data_set[idx_1, 0], data_set[idx_1, 1],marker='o',color='g',label=1,s=20)
+        p1 = ax.scatter(data_set[idx_1, 0], data_set[idx_1, 1], marker='o', color='g', label=1, s=20)
         idx_2 = where(data_set[:, 2] == -1)
-        p1 = ax.scatter(data_set[idx_2, 0], data_set[idx_2, 1],marker='x',color='r',label=1,s=20)
-        x=w[0][0]/abs(w[0][0])*10
+        p1 = ax.scatter(data_set[idx_2, 0], data_set[idx_2, 1], marker='x', color='r', label=1, s=20)
+        x = w[0][0] / abs(w[0][0]) * 10
+        y = w[0][1] / abs(w[0][0]) * 10
+        ann = ax.annotate(u"", xy=(x, y), xytext=(0, 0), size=20, arrowprops=dict(arrowstyle="-|>"))
+        ys = (-12 * (-w[0][0]) / w[0][1], 12 * (-w[0][0]) / w[0][1])
+        ax.add_line(Line2D((-12, 12), ys, linewidth=1, color='blue'))
+        plt.legend(loc='upper right')
+        plt.show()
+
+    return w
 
 
+data = create_separable_data([4, 3], 0, 100)
+w = train(data, True)
