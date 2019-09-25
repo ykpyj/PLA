@@ -46,7 +46,7 @@ def data_plot(data_set):
 
 def train(data_set, plot=False):
     num_lines = data_set.shape[0]
-    # 获取data_set的行数和每行的维数
+    # 获取data_set的行数和列数
     num_features = data_set.shape[1]
     w = zeros((1, num_features - 1))
     b = 0  # 初始化分割线
@@ -54,7 +54,9 @@ def train(data_set, plot=False):
 
     i = 0
     while not separated and i < num_lines:
+        # 不分和i<两条件同时满足时运行
         if data_set[i][-1] * (sum(w * data_set[i, 0:-1]) + b) <= 0:
+            # data_set[i,0:-1]返回一个拥有某行前两列数据的array[]
             w += data_set[i][-1] * data_set[i, 0:-1]
             b = b + data_set[i][-1]
             separated = False
@@ -67,6 +69,7 @@ def train(data_set, plot=False):
         from matplotlib.lines import Line2D
         fig = plt.figure()
         ax = fig.add_subplot(1, 1, 1)
+        # 将ax作为子图的对象，便于后续调用
         ax.set_title('Linear separable data set')
         plt.xlabel('X')
         plt.ylabel('Y')
@@ -76,14 +79,20 @@ def train(data_set, plot=False):
         p1 = ax.scatter(data_set[idx_2, 0], data_set[idx_2, 1], marker='x', color='r', label=1, s=20)
         x = w[0][0] / abs(w[0][0]) * 10
         y = w[0][1] / abs(w[0][0]) * 10
-        ann = ax.annotate(u"", xy=(x, y), xytext=(0, 0), size=20, arrowprops=dict(arrowstyle="-|>"))
-        ys = (-12 * (-w[0][0]) / w[0][1], 12 * (-w[0][0]) / w[0][1])
+        ann = ax.annotate(u"", xy=(x, y), xytext=(0, 0), size=10, arrowprops=dict(arrowstyle="-|>"))
+        # 用于对图上的注释，此处用来画法向量，注释内容以此为注释文本，注释点坐标
+        # 注释文本坐标，注释标志（箭头）大小，注释样式
+        ys = ((-12 * (-w[0][0])-b) / w[0][1], (12 * (-w[0][0])-b) / w[0][1])
+        # 构建出线上点坐标
         ax.add_line(Line2D((-12, 12), ys, linewidth=1, color='blue'))
+        # 用两个线上点的xy坐标作图
         plt.legend(loc='upper right')
+        # 放置图例
         plt.show()
 
     return w
 
 
-data = create_separable_data([4, 3], 0, 100)
+data= create_separable_data([4, 3], 0, 100)
 w = train(data, True)
+
